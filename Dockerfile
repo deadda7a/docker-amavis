@@ -1,10 +1,10 @@
 FROM alpine:3.18
 
 LABEL org.opencontainers.image.authors="Simon Rupf <simon@rupf.net>" \
-      org.opencontainers.image.source=https://github.com/simonrupf/docker-amavis \
+      org.opencontainers.image.source=https://github.com/deadda7a/docker-amavis \
       org.opencontainers.image.version="${VERSION}"
 
-ENV POSTFIX_HOSTNAME postfix
+ENV SMTP HOSTNAME
 
 COPY src /usr/local/bin
 
