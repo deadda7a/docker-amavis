@@ -16,7 +16,7 @@ jobs:
       - name: Prepare
         id: prepare
         run: |
-          IMAGE=deadda7a/amavis
+          IMAGE=deadda7a/docker-amavis
           QEMU_PLATFORMS=linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
           VERSION=${GITHUB_REF##*/}
           echo "buildx_args=--tag ${IMAGE}:latest \
