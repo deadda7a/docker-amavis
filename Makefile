@@ -1,7 +1,7 @@
 .PHONY: all build run debug clean help
 
 NAME = amavis
-IMAGE = simonrupf/$(NAME)
+IMAGE = deadda7a/$(NAME)
 
 all: build run ## Equivalent to "make build run" (default).
 

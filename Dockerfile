@@ -4,13 +4,11 @@ LABEL org.opencontainers.image.authors="Simon Rupf <simon@rupf.net>" \
       org.opencontainers.image.source=https://github.com/deadda7a/docker-amavis \
       org.opencontainers.image.version="${VERSION}"
 
-ENV SMTP HOSTNAME
-
 COPY src /usr/local/bin
 
 RUN apk upgrade --no-cache && \
     apk add --no-cache amavis cabextract 7zip patch perl-dbd-mysql \
-        perl-io-socket-ssl perl-mail-spf razor spamassassin tzdata && \
+        perl-io-socket-ssl perl-mail-spf razor spamassassin tzdata gpg-agent && \
     # initialize spamassassin database
     sa-update -v && \
     chown -R amavis:amavis /etc/mail/spamassassin /var/lib/spamassassin && \

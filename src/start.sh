@@ -1,5 +1,26 @@
 #!/bin/sh
 
+# Defaults
+if [ -z ${SMTPHOST} ]; then
+    echo "SMTPHOST set to smtp-out"
+	export SMTPHOST="smtp-out"
+fi
+
+if [ -z ${SMTPPORT} ]; then
+    echo "SMTPPORT set to 25"
+	export SMTPPORT=25
+fi
+
+if [ -z ${DOMAIN} ]; then
+    echo "DOMAIN set to example.com"
+	export DOMAIN="example.com"
+fi
+
+if [ -z ${MYHOSTNAME} ]; then
+    echo "MYHOSTNAME set to amavis.${DOMAIN}"
+	export MYHOSTNAME="amavis.${DOMAIN}"
+fi
+
 (
 while true; do
 	sa-update -v

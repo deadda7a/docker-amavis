@@ -1,35 +1,50 @@
 --- /etc/amavisd.conf
-+++ /tmp/amavisd.conf
-@@ -165,10 +165,12 @@
++++ /etc/amavisd.conf
+@@ -20,7 +20,8 @@
+ $daemon_user   = 'amavis';   # (no default;  customary: vscan or amavis), -u
+ @daemon_groups  = 'amavis';  # (no default;  customary: vscan or amavis), -g
+ 
+-$mydomain = 'example.com';   # a convenient default for other settings
++$mydomain = "$ENV{DOMAIN}";   # a convenient default for other settings
++$inet_socket_bind = '0.0.0.0';
+ 
+ $MYHOME = '/var/amavis';
+ $TEMPBASE = "$MYHOME/tmp";
+@@ -56,6 +57,8 @@
+ @mynetworks = qw( 127.0.0.0/8 [::1] [FE80::]/10 [FEC0::]/10
+                   10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 );
+ 
++@inet_acl = qw( 0/0 [::] );
++
+ $unix_socketname = "$MYHOME/amavisd.sock";  # amavisd-release or amavis-milter
+                # option(s) -p overrides $inet_socket_port and $unix_socketname
+ 
+@@ -165,10 +168,10 @@
  
  # OTHER MORE COMMON SETTINGS (defaults may suffice):
  
 -# $myhostname = 'host.example.com';  # must be a fully-qualified domain name!
-+$myhostname = $ENV{HOSTNAME};
-+$inet_socket_bind = '0';
-+@inet_acl = qw( 0/0 );
++$myhostname = "$ENV{MYHOSTNAME}";  # must be a fully-qualified domain name!
  
 -# $notify_method  = 'smtp:[127.0.0.1]:10025';
 -# $forward_method = 'smtp:[127.0.0.1]:10025';  # set to undef with milter!
-+$notify_method  = "smtp:$ENV{SMTP}";
-+$forward_method  = "smtp:$ENV{SMTP}";
++$notify_method  = "smtp:[$ENV{SMTPHOST}]:$ENV{SMTPPORT}";
++$forward_method = "smtp:[$ENV{SMTPHOST}]:$ENV{SMTPPORT}";  # set to undef with milter!
  
  # $final_virus_destiny      = D_DISCARD;
  # $final_banned_destiny     = D_DISCARD;
-@@ -812,11 +814,11 @@
- # You may also have to adjust the path to the clamd communication
+@@ -813,10 +816,10 @@
  # socket to match your system. The path is usually defined in the file
  # /etc/clamd.conf, or may be controlled by your service manager / init.
--#
+ #
 -# ['ClamAV-clamd',
 -#   \&ask_daemon, ["CONTSCAN {}\n", "/var/run/clamav/clamd.sock"],
 -#   qr/\bOK$/m, qr/\bFOUND$/m,
 -#   qr/^.*?: (?!Infected Archive)(.*) FOUND$/m ],
-+
-+  ['ClamAV-clamd',
-+    \&ask_daemon, ["CONTSCAN {}\n", "clamd:3310"],
-+    qr/\bOK$/m, qr/\bFOUND$/m,
-+    qr/^.*?: (?!Infected Archive)(.*) FOUND$/m ],
++ ['ClamAV-clamd',
++   \&ask_daemon, ["CONTSCAN {}\n", "clamd:3310"],
++   qr/\bOK$/m, qr/\bFOUND$/m,
++   qr/^.*?: (?!Infected Archive)(.*) FOUND$/m ],
  
  # ['ClamAV-clamd-stream',
  #   \&ask_daemon, ["*", 'clamd:/var/run/clamav/clamd.sock'],
