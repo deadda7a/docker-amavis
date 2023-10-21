@@ -21,14 +21,7 @@ if [ -z ${MYHOSTNAME} ]; then
 	export MYHOSTNAME="amavis.${DOMAIN}"
 fi
 
-(
-while true; do
-	sa-update -v
-	sleep 30h
-done
-) &
 BACKGROUND_TASKS="$!"
-
 amavisd -c /etc/amavisd.conf -c /etc/amavisd-local.conf foreground &
 BACKGROUND_TASKS="${BACKGROUND_TASKS} $!"
 
