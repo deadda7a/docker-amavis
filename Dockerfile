@@ -8,10 +8,7 @@ COPY src /usr/local/bin
 
 RUN apk upgrade --no-cache && \
     apk add --no-cache amavis cabextract 7zip patch perl-dbd-mysql \
-        perl-io-socket-ssl perl-mail-spf razor spamassassin tzdata gpg-agent && \
-    # initialize spamassassin database
-    sa-update -v && \
-    chown -R amavis:amavis /etc/mail/spamassassin /var/lib/spamassassin && \
+        perl-io-socket-ssl perl-mail-spf tzdata && \
     # configure amavisd
     patch /etc/amavisd.conf /usr/local/bin/amavisd.conf.patch && \
     echo "1;" > /etc/amavisd-local.conf && \
@@ -22,14 +19,8 @@ RUN apk upgrade --no-cache && \
 WORKDIR /var/amavis
 USER amavis:amavis
 
-# Configure Razor
-RUN razor-admin -create -d && \
-    sed -i -r 's/^(logfile[^=]*=).*$/\1 \/dev\/stdout/g' \
-        /var/amavis/.razor/razor-agent.conf && \
-    razor-admin -register
-
 EXPOSE 10024/tcp
-VOLUME /etc/mail/spamassassin /var/amavis /var/lib/spamassassin /tmp
+VOLUME /var/amavis /tmp
 
 CMD start.sh
 HEALTHCHECK CMD health.sh
